@@ -1,0 +1,4 @@
+early_stopping:
+  _target_: lightning.pytorch.callbacks.EarlyStopping
+  monitor: ${....model.monitor}
+  patience: 3

@@ -1,0 +1,8 @@
+defaults:
+  - _self_
+  - /data: mnist
+
+method: LDA_LABEL
+parameters:
+  alpha: 0.5
+data: ???

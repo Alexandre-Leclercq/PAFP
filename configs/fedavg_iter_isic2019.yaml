@@ -1,0 +1,38 @@
+defaults:
+  - global: local_settings
+  - learning: federated
+  - override learning/federated@learning: fedavg
+  - override learning/partitioning: multi_dataset
+  - override learning/partitioning/data@learning.partitioning: fed_isic2019
+  - override model@learning.clients.model: efficient_net
+  - override model@learning.server.global_model: efficient_net
+  - override trainer@learning.clients.trainer: custom_trainer
+  - override trainer@learning.server.global_trainer: server_trainer
+  - _self_
+
+#code_test: True
+learning:
+  server:
+    n_round: 2000
+    global_model:
+      in_channels: ${...partitioning.data.1.datamodule.n_channel}
+      img_size: ${if_not_null:${oc.select:...partitioning.data.1.datamodule.resize, null}, ${...partitioning.data.1.datamodule.img_size}}
+      n_class: ${...partitioning.data.1.datamodule.n_class}
+  clients:
+    n_client: ${..partitioning.n_datasets}
+    model:
+      optimizer: torch.optim.SGD
+      learning_rate: 1e-2
+      gradient_logging: True
+      weight_decay: 0.0
+      in_channels: ${...partitioning.data.1.datamodule.n_channel}
+      img_size: ${if_not_null:${oc.select:...partitioning.data.1.datamodule.resize, null}, ${...partitioning.data.1.datamodule.img_size}}
+      n_class: ${...partitioning.data.1.datamodule.n_class}
+      loss:
+        _target_: lab.utils.loss.FocalLoss
+        alpha: null # compute dynamically
+        gamma: 2.0
+    steps_mode: 'iter'
+    max_steps: 100
+    trainer:
+      enable_progress_bar: True

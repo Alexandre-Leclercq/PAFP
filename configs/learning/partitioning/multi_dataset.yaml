@@ -1,0 +1,7 @@
+defaults:
+  - _self_
+  - data@: gbm_datasets
+
+method: multi_dataset
+data: ???
+datamodule_shared_parameters: ???

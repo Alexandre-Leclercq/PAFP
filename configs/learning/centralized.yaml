@@ -1,0 +1,15 @@
+defaults:
+  - /model@model: efficient_net
+  - /data@data: mnist
+  - /trainer@trainer: trainer
+  - override /trainer/logger: tensorboard
+  - override /trainer/callbacks: callbacks
+  - _self_ # other element of this config file will override defaults values
+
+paradigm: centralized
+model:
+  in_channels: ${..data.datamodule.n_channel}
+  img_size: ${if_not_null:${oc.select:..data.datamodule.resize, null}, ${..data.datamodule.img_size}}
+  n_class: ${..data.datamodule.n_class}
+trainer:
+  max_epochs: 20

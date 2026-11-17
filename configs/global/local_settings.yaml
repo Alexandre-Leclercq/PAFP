@@ -1,0 +1,16 @@
+# @package _global_
+hydra:
+  run:
+    dir: ./outputs/${now:%Y-%m-%d_%H-%M-%S}/
+
+# mode part of config
+base_dir_run: ${hydra:run.dir}
+verbose: False
+interactive: True
+seed: 23
+n_runs: 5
+parallelism: False
+code_test: False # Use to indicate we are in integration test scenarios
+dataset_dir: '../dataset' # local setting
+timm_dir: '../timm' # local setting
+gpu_index: [ 0 ] # in local we don't use multiple gpu

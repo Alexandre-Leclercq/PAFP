@@ -1,0 +1,10 @@
+model_checkpoint:
+  _target_: lightning.pytorch.callbacks.ModelCheckpoint
+  monitor: ${....model.monitor}
+  mode: ${....model.monitor_objective}
+  save_top_k: 1
+  dirpath: ${base_dir_run}/checkpoints
+  filename: "{epoch}"
+#  save_weights_only: False # by default is false. It save weight but also optimizer states, etc.
+  every_n_epochs: 1
+  save_last: True

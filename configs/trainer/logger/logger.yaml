@@ -1,0 +1,6 @@
+tensorboard:
+  _target_: lightning.pytorch.loggers.tensorboard.TensorBoardLogger
+  save_dir: ${base_dir_run}
+csv_logger:
+  _target_: lightning.pytorch.loggers.CSVLogger
+  save_dir: ${base_dir_run}

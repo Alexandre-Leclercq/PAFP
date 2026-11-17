@@ -1,0 +1,5 @@
+latent_saver:
+  _target_: lab.utils.callbacks.LatentSaverCallback
+  output_dir: ${base_dir_run}/latent_repr
+  save_every_n_epochs: 10
+  prefix_name: null # use by the client to indicate which is from which client

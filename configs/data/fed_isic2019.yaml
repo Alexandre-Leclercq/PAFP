@@ -1,0 +1,15 @@
+name: Fed-ISIC2019
+datamodule:
+  _target_: lab.data.datamodules.FedIsic2019DataModule
+  dataset_path: ${dataset_dir}/ISIC2019
+  batch_size: 64
+  train_val_test_shuffle: [True, False, False]
+  train_val_split: [0.9, 0.1]
+  img_size: 200 #dataset do random crop -> 200x200
+  n_channel: 3
+  n_class: 8
+  normalize: 'imagenet'
+  persistent_workers: True
+  n_worker: 4
+  pooled: True
+  target: 'melanoma'

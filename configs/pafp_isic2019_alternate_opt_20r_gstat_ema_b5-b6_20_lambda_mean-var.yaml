@@ -1,0 +1,76 @@
+defaults:
+  - global: local_settings
+  - learning: federated
+  - override /learning/federated@learning: pafp_alternate_opt
+
+  - override /learning/partitioning: multi_dataset
+  - override /learning/partitioning/data@learning.partitioning: fed_isic2019
+
+  - override /model@learning.clients.model: pafp_efficient_net
+  - override /trainer@learning.clients.trainer: custom_trainer
+
+  - override /model@learning.server.global_model: pafp_efficient_net
+  - override /trainer@learning.server.global_trainer: server_trainer
+
+  - _self_
+
+#code_test: True
+learning:
+  server:
+    n_round: 2000
+    alternate_opt:
+      name: 'switch_every_n_rounds'
+      params:
+        start_after_n_rounds: 10
+        switch_n_rounds: 20
+    global_statistics_update_mode: 'ema'
+    global_model:
+      in_channels: ${...partitioning.data.1.datamodule.n_channel}
+      img_size: ${if_not_null:${oc.select:...partitioning.data.1.datamodule.resize, null}, ${...partitioning.data.1.datamodule.img_size}}
+      n_class: ${...partitioning.data.1.datamodule.n_class}
+      unfrozen_params:
+        - "blocks.5"
+        - "blocks.6"
+        - "conv_head"
+        - "bn2"
+      local_params_keys: []
+      lambda_: 20
+      personalized_features_aligner:
+        momentum: 0.8
+        statistic_mode: 'mean-var'
+        initialization: 'id_init'
+  clients:
+    n_client: ${..partitioning.n_datasets}
+    model:
+      optimizer: torch.optim.SGD
+      learning_rate: 1e-2
+      gradient_logging: True
+      weight_decay: 1e-5
+      weighted_loss: True
+      personalized_logits: False
+      gradient_clip_val: 0.0
+      in_channels: ${...partitioning.data.1.datamodule.n_channel}
+      img_size: ${if_not_null:${oc.select:...partitioning.data.1.datamodule.resize, null}, ${...partitioning.data.1.datamodule.img_size}}
+      n_class: ${...partitioning.data.1.datamodule.n_class}
+      lambda_: 10
+      personalized_features_aligner:
+        momentum: 0.8
+        statistic_mode: 'mean-var'
+        initialization: 'id_init'
+      unfrozen_params:
+        - "blocks.5"
+        - "blocks.6"
+        - "conv_head"
+        - "bn2"
+      local_params_keys: []
+      loss:
+        _target_: lab.utils.loss.FocalLoss
+        alpha: null # compute dynamically
+        gamma: 2.0
+    steps_mode: 'epoch'
+    max_steps: 1
+    trainer:
+      enable_progress_bar: True
+  partitioning:
+    datamodule_shared_parameters: # define the shared parameters between datamodule of each
+      batch_size: 64

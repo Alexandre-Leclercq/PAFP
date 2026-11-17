@@ -1,0 +1,8 @@
+defaults:
+  - _self_
+  - /data: mnist
+
+method: FEATURE_NOISE
+parameters:
+  scale: 0.1
+data: ???

@@ -1,0 +1,4 @@
+defaults:
+  - model_checkpoint
+#  - callbacks@_global_: ${latent_mapping.${use_latent_saver}}
+  - _self_

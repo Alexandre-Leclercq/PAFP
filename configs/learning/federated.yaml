@@ -1,0 +1,30 @@
+defaults:
+  - federated@: fedavg
+  - partitioning: multi_dataset
+
+  - _self_
+
+
+paradigm: federated
+server: # will be override by /federated configs
+  parallelism: ${parallelism}
+  global_model:
+    n_class: ??? #${...partitioning.data.datamodule.n_class}
+  n_round: 2
+clients:
+  # indicate the of device_id that can be use for each client
+  # the length of the list must be equal to the num of client if provided
+  # if null, the system will use an auto assignation method.
+  class_path: ???
+  n_client: 2
+  steps_mode: 'epoch'
+  max_steps: 1
+  model:
+    n_class: ??? #${...partitioning.data.datamodule.n_class}
+#partitioning:
+#  method: ???
+#  data: ???
+
+  # multiple choice
+  # 1. split a global dataset using a partitionning method
+  # 2. use the same dataset for each client w/o partitionning

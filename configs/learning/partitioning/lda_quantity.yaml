@@ -1,0 +1,8 @@
+defaults:
+  - _self_
+  - /data: mnist
+
+method: LDA_QUANTITY
+parameters:
+  alpha: 0.5
+data: ???

@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Environment
+.venv/
+.env
+
+# Experiment outputs
+outputs/
+lightning_logs/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+
+# Notebooks
+.ipynb_checkpoints/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store

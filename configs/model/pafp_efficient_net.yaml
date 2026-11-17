@@ -1,0 +1,59 @@
+_target_: lab.models.PAFP_EfficientNet
+optimizer: torch.optim.SGD
+learning_rate: 1e-2
+weight_decay: 1e-4
+timm_dir: ${timm_dir}
+dropout_rate: 0.0
+gradient_clip_val: 0.0
+in_channels: ???
+img_size: ???
+n_class: ???
+gradient_logging: True
+personalized_logits: False
+weighted_loss: True
+unfrozen_params: []
+local_params_keys: []
+monitor: 'val/balanced-acc'
+monitor_objective: 'max'
+lambda_: 1.0
+personalized_features_aligner:
+  momentum: 0.8
+  statistic_mode: 'mean-std'
+  initialization: 'id_init'
+loss:
+  _target_: lab.utils.loss.FocalLoss
+  alpha: null
+  gamma: 2.0
+train_metrics:
+  balanced-acc:
+    _target_: torchmetrics.Accuracy
+    task: multiclass
+    num_classes: ${...n_class} # interpolate n_class relatively from 3 upper level (which correspond to the n_class) of model
+    average: macro
+  f1score:
+    _target_: torchmetrics.F1Score
+    task: multiclass
+    num_classes: ${...n_class} # interpolate n_class relatively from 3 upper level (which correspond to the n_class) of model
+    average: weighted
+validation_metrics:
+  balanced-acc:
+    _target_: torchmetrics.Accuracy
+    task: multiclass
+    num_classes: ${...n_class} # interpolate n_class relatively from 3 upper level (which correspond to the n_class) of model
+    average: macro
+  f1score:
+    _target_: torchmetrics.F1Score
+    task: multiclass
+    num_classes: ${...n_class} # interpolate n_class relatively from 3 upper level (which correspond to the n_class) of model
+    average: weighted
+test_metrics:
+  balanced-acc:
+    _target_: torchmetrics.Accuracy
+    task: multiclass
+    num_classes: ${...n_class} # interpolate n_class relatively from 3 upper level (which correspond to the n_class) of model
+    average: macro
+  f1score:
+    _target_: torchmetrics.F1Score
+    task: multiclass
+    num_classes: ${...n_class} # interpolate n_class relatively from 3 upper level (which correspond to the n_class) of model
+    average: weighted

@@ -1,0 +1,31 @@
+defaults:
+  - global: local_settings
+  - learning: centralized
+  - override /data@learning.data: fed_isic2019
+  - override /model@learning.model: pfp_efficient_net
+  - override /trainer@learning.trainer: trainer
+  - override /trainer/callbacks@learning.trainer.callbacks: model_checkpoint
+  - _self_
+
+#code_test: True
+learning:
+  model:
+    optimizer: torch.optim.SGD
+    learning_rate: 1e-2
+    gradient_logging: True
+    weight_decay: 1e-5
+    weighted_loss: True
+    personalized_logits: False
+    gradient_clip_val: 0.0
+    unfrozen_params: []
+    local_params_keys: []
+    loss:
+      _target_: lab.utils.loss.FocalLoss
+      alpha: null # compute dynamically
+      gamma: 2.0
+  trainer:
+    enable_progress_bar: True
+    max_epochs: 200
+  data:
+    batch_size: 64
+    target: 'center'

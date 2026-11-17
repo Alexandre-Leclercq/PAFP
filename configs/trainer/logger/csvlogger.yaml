@@ -1,0 +1,2 @@
+_target_: lightning.pytorch.loggers.CSVLogger
+root_dir: ${base_dir_run}

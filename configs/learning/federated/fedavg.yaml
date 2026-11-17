@@ -1,0 +1,25 @@
+# a FL method is a triplet of
+# - server
+# - client
+# - model
+# the rest is hyperparameters
+
+defaults:
+  - _self_
+  - /trainer@server.global_trainer: server_trainer
+  - /model@server.global_model: efficient_net
+
+  - /trainer@clients.trainer: custom_trainer
+  - /model@clients.model: efficient_net
+
+server:
+  class_path: lab.federated.servers.FedAvgServer
+  global_model: ???
+  global_trainer: ???
+  robust_evaluation: True
+  n_round: 1
+  sampling_proportion: 1.0
+  #num_local_epoch: 1 # or list of int to specify a different value for each client
+  log_dir: ${base_dir_run}
+clients:
+  class_path: lab.federated.clients.FedAvgClient
